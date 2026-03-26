@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import type { CarouselPhoto } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -51,6 +51,7 @@ export default function PhotosPage() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const fetchPhotos = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const { data, error: err } = await supabase

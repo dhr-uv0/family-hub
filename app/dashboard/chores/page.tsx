@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import type { Chore, ChoreCompletion, FamilyMember } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -76,6 +76,7 @@ export default function ChoresPage() {
   const weekDates = DAYS.map((_, i) => addDays(weekStart, i))
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const weekStartStr = format(weekStart, 'yyyy-MM-dd')

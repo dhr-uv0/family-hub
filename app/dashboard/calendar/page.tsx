@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { Activity, FamilyMember } from '@/lib/types'
 import { FamilyCalendar } from '@/components/calendar/FamilyCalendar'
 import { EventDialog } from '@/components/calendar/EventDialog'
@@ -18,6 +18,7 @@ export default function CalendarPage() {
   const [fabOpen, setFabOpen] = useState(false)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const [activitiesRes, membersRes] = await Promise.all([
         supabase

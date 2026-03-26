@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { ImportantInfo } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -70,6 +70,7 @@ export default function InfoPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const { data, error: err } = await supabase

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import { ShoppingList as ShoppingListType, ShoppingItem as ShoppingItemType, FamilyMember } from '@/lib/types'
 import ShoppingItem from './ShoppingItem'
@@ -40,6 +40,7 @@ export default function ShoppingList({ list, familyMembers }: ShoppingListProps)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const fetchItems = useCallback(async () => {
+    if (!isSupabaseConfigured()) return
     const supabase = createClient()
     const { data, error } = await supabase
       .from('shopping_items')

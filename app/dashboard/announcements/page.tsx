@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import type { Announcement, FamilyMember } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -75,6 +75,7 @@ export default function AnnouncementsPage() {
   const [isAdmin, setIsAdmin] = useState(false)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const now = new Date().toISOString()

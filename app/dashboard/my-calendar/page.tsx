@@ -11,7 +11,7 @@ import {
   startOfDay,
   compareAsc,
 } from 'date-fns'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { Task, CalendarEvent, FamilyMember } from '@/lib/types'
 import { FamilyCalendar } from '@/components/calendar/FamilyCalendar'
 import { EventDialog } from '@/components/calendar/EventDialog'
@@ -60,6 +60,7 @@ export default function MyCalendarPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'todo' | 'in-progress' | 'done'>('all')
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const {
         data: { user },

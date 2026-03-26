@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { FamilyMember } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -97,6 +97,10 @@ export default function SettingsPage() {
   const [signingOut, setSigningOut] = useState(false)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setLoading(false)
+      return
+    }
     try {
       const supabase = createClient()
       const [{ data: membersData, error: membersErr }, { data: { user } }] = await Promise.all([

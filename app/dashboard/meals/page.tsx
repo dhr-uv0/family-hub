@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import type { Meal, FamilyMember } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -88,6 +88,7 @@ export default function MealsPage() {
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const start = format(weekStart, 'yyyy-MM-dd')

@@ -23,7 +23,7 @@ import { cn, PRIORITY_COLORS, CATEGORY_ICONS } from '@/lib/utils'
 import type { Task, FamilyMember, TaskPriority, TaskStatus, TaskCategory } from '@/lib/types'
 import { TaskItem } from './TaskItem'
 import { TaskDialog } from './TaskDialog'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 
 interface TaskListProps {
   tasks: Task[]

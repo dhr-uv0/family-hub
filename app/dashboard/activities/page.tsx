@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import type { Activity, FamilyMember } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -100,6 +100,7 @@ export default function ActivitiesPage() {
   const [saving, setSaving] = useState(false)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const supabase = createClient()
       const [{ data: activitiesData, error: actErr }, { data: membersData, error: membersErr }] =

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { Task, FamilyMember } from '@/lib/types'
 import { TaskList } from '@/components/tasks/TaskList'
 import { TaskDialog } from '@/components/tasks/TaskDialog'
@@ -32,6 +32,7 @@ export default function TasksPage() {
   const [activeTab, setActiveTab] = useState('my-tasks')
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     try {
       const {
         data: { user },
