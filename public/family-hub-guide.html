@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Hub – Family Setup &amp; How-To Guide</title>
+<style>
+  /* ── Print &amp; Word friendly ── */
+  @page { margin: 2.5cm; }
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
+    font-size: 11pt;
+    color: #1f2937;
+    line-height: 1.6;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    background: #fff;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    text-align: center;
+    padding: 60px 20px 50px;
+    background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+    border-radius: 12px;
+    margin-bottom: 40px;
+    border: 1px solid #99f6e4;
+  }
+  .cover-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .cover h1 {
+    font-size: 32pt;
+    font-weight: 700;
+    color: #0f766e;
+    margin: 0 0 8px;
+  }
+  .cover .subtitle {
+    font-size: 14pt;
+    color: #0d9488;
+    margin: 0 0 24px;
+  }
+  .cover .url-box {
+    display: inline-block;
+    background: #fff;
+    border: 2px solid #14b8a6;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #0f766e;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Section headings ── */
+  h2 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #0f766e;
+    border-bottom: 3px solid #14b8a6;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    margin-bottom: 16px;
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #1f2937;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+  h4 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #374151;
+    margin: 16px 0 6px;
+  }
+
+  /* ── Callout boxes ── */
+  .box {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .box-teal  { background: #f0fdfa; border-left: 4px solid #14b8a6; }
+  .box-amber { background: #fffbeb; border-left: 4px solid #f59e0b; }
+  .box-blue  { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .box-green { background: #f0fdf4; border-left: 4px solid #10b981; }
+  .box-red   { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .box strong { display: block; margin-bottom: 4px; }
+
+  /* ── Steps ── */
+  .steps { list-style: none; padding: 0; margin: 12px 0; }
+  .steps li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 28px;
+    height: 28px;
+    background: #14b8a6;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 10pt;
+    flex-shrink: 0;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 11pt; color: #1f2937; }
+  .step-body span { font-size: 10pt; color: #4b5563; }
+
+  /* ── Platform cards ── */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .platform-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .platform-header {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 12pt;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .platform-header.ios  { background: #eff6ff; color: #1d4ed8; }
+  .platform-header.win  { background: #f5f3ff; color: #6d28d9; }
+  .platform-body { padding: 14px 16px; }
+  .platform-body ol { margin: 0; padding-left: 18px; }
+  .platform-body li { margin-bottom: 6px; font-size: 10.5pt; }
+
+  /* ── Feature table ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10.5pt;
+  }
+  th {
+    background: #f0fdfa;
+    color: #0f766e;
+    font-weight: 700;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid #d1fae5;
+  }
+  td {
+    padding: 9px 12px;
+    border: 1px solid #e5e7eb;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 9pt;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  .badge-teal  { background: #ccfbf1; color: #0f766e; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 2px solid #f3f4f6; margin: 32px 0; }
+
+  /* ── Print ── */
+  @media print {
+    .platform-grid { grid-template-columns: 1fr 1fr; }
+    h2 { page-break-before: auto; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* ── QR placeholder ── */
+  .qr-box {
+    display: inline-block;
+    border: 2px dashed #14b8a6;
+    border-radius: 8px;
+    padding: 20px 28px;
+    text-align: center;
+    color: #0d9488;
+    font-size: 10pt;
+  }
+  .qr-icon { font-size: 48px; display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<div class="cover">
+  <span class="cover-icon">🏠</span>
+  <h1>Family Hub</h1>
+  <p class="subtitle">Your Family's Smart Home Command Center</p>
+  <div class="url-box">family-hub-seven.vercel.app</div>
+  <p style="margin-top:16px; color:#6b7280; font-size:10pt;">
+    Setup &amp; How-To Guide &nbsp;·&nbsp; For all devices &amp; family members
+  </p>
+</div>
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<h2>📋 What is Family Hub?</h2>
+
+<p>Family Hub is a <strong>shared app for your whole family</strong> — think of it as a digital family command center. Everyone in the family can open the same app, see the same information in real-time, and add or update content from any device.</p>
+
+<div class="box box-teal">
+  <strong>✅ Your family's use case is fully supported:</strong>
+  Works on iPhone, iPad, Windows PC, and any web browser. All 4 family members can install it and see each other's updates <em>instantly</em> — no refresh needed.
+</div>
+
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>Works on iOS?</th>
+    <th>Works on Windows?</th>
+    <th>Real-time sync?</th>
+  </tr>
+  <tr><td>Dashboard</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Shopping Lists</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Live updates</td></tr>
+  <tr><td>Family Calendar</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Tasks &amp; Personal Calendar</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Meal Planner</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Chore Chart</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Photo Carousel</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Announcements</td><td>✅ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+  <tr><td>Voice Input</td><td>✅ Safari 14.5+</td><td>✅ Chrome/Edge</td><td>—</td></tr>
+  <tr><td>Installable as App</td><td>✅ Add to Home Screen</td><td>✅ Chrome/Edge install</td><td>—</td></tr>
+  <tr><td>Works Offline (read)</td><td>✅ Cached pages</td><td>✅ Cached pages</td><td>—</td></tr>
+</table>
+
+<hr>
+
+<!-- ═══════════════ STEP 1: ACCOUNTS ═══════════════ -->
+<h2>Step 1 — Create Your Family Accounts</h2>
+
+<div class="box box-amber">
+  <strong>⚠️ One-time setup — do this first before anyone installs the app</strong>
+  Each family member needs their own account. The first person to sign up should be a parent (they become the Admin).
+</div>
+
+<ul class="steps">
+  <li>
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <strong>Open a web browser and go to the app</strong>
+      <span>On any device: type <strong>family-hub-seven.vercel.app</strong> in the address bar and press Enter</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <strong>Tap "Sign up" to create the first account (Parent 1 — Admin)</strong>
+      <span>Enter your name, email address, and a password. This account will be the family Admin.</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <strong>Check your email and confirm your account</strong>
+      <span>You'll receive a confirmation email. Click the link inside it. Then come back and log in.</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <strong>Repeat for each family member</strong>
+      <span>Each person does the same on their own device — or you can sign them up from one device first, then they log in on their own. Use a different email per person.</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <strong>Admin: Go to Settings → Family Members → Add each person</strong>
+      <span>After signing in, tap Settings in the sidebar. Add each family member's name, pick a colour, and assign their role (Admin for parents, Member for kids).</span>
+    </div>
+  </li>
+</ul>
+
+<div class="box box-blue">
+  <strong>💡 Tip — Shared family email alternative:</strong>
+  If your kids don't have their own email, you can use Gmail aliases. For example, if your email is <em>yourname@gmail.com</em>, use <em>yourname+kid1@gmail.com</em> — Gmail delivers it to the same inbox.
+</div>
+
+<hr>
+
+<!-- ═══════════════ STEP 2: INSTALL ═══════════════ -->
+<h2>Step 2 — Install the App on Every Device</h2>
+
+<p>Family Hub works in any browser, but installing it as an app gives you a home screen icon, full-screen experience, and faster loading. Here's how to do it on each platform:</p>
+
+<div class="platform-grid">
+  <!-- iOS -->
+  <div class="platform-card no-break">
+    <div class="platform-header ios">📱 iPhone &amp; iPad (iOS)</div>
+    <div class="platform-body">
+      <h4>Using Safari (required for iOS)</h4>
+      <ol>
+        <li>Open <strong>Safari</strong> (must be Safari, not Chrome)</li>
+        <li>Go to <strong>family-hub-seven.vercel.app</strong></li>
+        <li>Tap the <strong>Share button</strong> at the bottom (box with arrow pointing up ↑)</li>
+        <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+        <li>Change the name to <strong>Family Hub</strong> if needed</li>
+        <li>Tap <strong>Add</strong> in the top right</li>
+      </ol>
+      <p style="margin-top:10px; font-size:10pt; color:#374151;">
+        ✅ The app now appears on your home screen like any other app. Tap it to open full-screen.
+      </p>
+    </div>
+  </div>
+
+  <!-- Windows -->
+  <div class="platform-card no-break">
+    <div class="platform-header win">💻 Windows PC &amp; Laptop</div>
+    <div class="platform-body">
+      <h4>Using Chrome or Edge (recommended)</h4>
+      <ol>
+        <li>Open <strong>Chrome</strong> or <strong>Microsoft Edge</strong></li>
+        <li>Go to <strong>family-hub-seven.vercel.app</strong></li>
+        <li>Look for the <strong>install icon</strong> in the address bar (a circle with a + or a computer icon)</li>
+        <li>Click it and select <strong>"Install"</strong></li>
+        <li>The app opens in its own window, no browser tabs needed</li>
+      </ol>
+      <p style="margin-top:10px; font-size:10pt; color:#374151;">
+        ✅ Find it in your Start Menu or Desktop as "Family Hub". Works like a native app.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="box box-green">
+  <strong>📌 No installation? No problem.</strong>
+  You don't have to install it. Every family member can also just open a browser and go to <strong>family-hub-seven.vercel.app</strong> — it works exactly the same. Installation just makes it faster to open.
+</div>
+
+<hr>
+
+<!-- ═══════════════ STEP 3: LOGGING IN ═══════════════ -->
+<h2>Step 3 — Signing In</h2>
+
+<ul class="steps">
+  <li>
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <strong>Open the app</strong>
+      <span>Either tap the home screen icon (installed) or go to family-hub-seven.vercel.app in a browser</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <strong>Enter your email and password, then tap "Sign in"</strong>
+      <span>You'll be taken straight to the Dashboard.</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <strong>Prefer not to type a password? Use Magic Link</strong>
+      <span>Tap "Send magic link" on the login screen, enter your email, and click the link in the email you receive. No password needed.</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <strong>Stay signed in</strong>
+      <span>Your session lasts 7 days. On a family device (like a kitchen tablet), you can stay permanently signed in and never have to log in again.</span>
+    </div>
+  </li>
+</ul>
+
+<hr>
+
+<!-- ═══════════════ NAVIGATING ═══════════════ -->
+<h2>Step 4 — Getting Around the App</h2>
+
+<h3>On Phone (iPhone)</h3>
+<p>A <strong>bottom tab bar</strong> appears at the bottom of the screen with the main sections. Tap <strong>"More"</strong> to see all pages.</p>
+
+<h3>On iPad &amp; Windows (tablet/desktop)</h3>
+<p>A <strong>sidebar</strong> appears on the left with all pages listed. Click any item to navigate.</p>
+
+<h3>Family Mode vs Personal Mode</h3>
+<p>At the top of every page there is a toggle switch:</p>
+<table>
+  <tr>
+    <th>Mode</th>
+    <th>What you see</th>
+    <th>Who can see it</th>
+  </tr>
+  <tr>
+    <td><strong>🏠 Family</strong> <span class="badge badge-teal">Default</span></td>
+    <td>Shared calendar, shopping, meals, chores, announcements, photos</td>
+    <td>Everyone in the family</td>
+  </tr>
+  <tr>
+    <td><strong>👤 Personal</strong></td>
+    <td>Your private tasks, personal calendar, private to-do lists</td>
+    <td>Only you</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<h2>Step 5 — Using Each Feature</h2>
+
+<h3>🏠 Dashboard</h3>
+<p>The home screen everyone sees when they open the app. Shows:</p>
+<ul>
+  <li><strong>Live clock</strong> — current time and date</li>
+  <li><strong>Weather</strong> — current conditions for your city (set city in Settings)</li>
+  <li><strong>Today's Schedule</strong> — all family events happening today</li>
+  <li><strong>Who Is Home</strong> — each family member's status (Home/Away/School/Work/Running Late). Tap your own card to update your status.</li>
+  <li><strong>Announcements</strong> — important family messages at the top</li>
+  <li><strong>Photo of the Day</strong> — a random family photo</li>
+  <li><strong>Morning Briefing</strong> — appears 6–10am with a summary of the day</li>
+</ul>
+
+<h3>📅 Family Calendar</h3>
+<ul>
+  <li>Switch between <strong>Month</strong>, <strong>Week</strong>, and <strong>Day</strong> views</li>
+  <li>Each family member's events appear in <strong>their colour</strong></li>
+  <li>Tap any day to add an event, or tap an existing event to edit it</li>
+  <li>Set <strong>recurring events</strong> (e.g. weekly soccer practice)</li>
+  <li>All changes appear on everyone's devices <strong>instantly</strong></li>
+</ul>
+
+<h3>🛒 Shopping Lists</h3>
+<ul>
+  <li>You can have <strong>multiple lists</strong> (e.g. Grocery, Hardware, Costco)</li>
+  <li>Tap <strong>+</strong> to add an item to the active list</li>
+  <li>Tap the <strong>checkbox</strong> next to an item to mark it done</li>
+  <li>Tap <strong>"Clear done"</strong> to remove all completed items</li>
+  <li>If someone adds an item on their phone, it appears on your screen <strong>in seconds</strong> — no refresh needed</li>
+  <li>Items are grouped by category (Produce, Dairy, etc.)</li>
+</ul>
+
+<div class="box box-amber">
+  <strong>💡 Shopping list tip:</strong>
+  When you're at the store, open the app on your phone. As you pick up items, tap the checkbox. Your partner at home will see the list update in real-time and can add forgotten items while you're still shopping.
+</div>
+
+<h3>✅ Tasks (Personal Mode)</h3>
+<ul>
+  <li>Switch to <strong>Personal Mode</strong> to see your private task list</li>
+  <li>Add tasks with: title, due date, priority (Low / Medium / High / Urgent), category, and tags</li>
+  <li><strong>Overdue tasks</strong> turn red automatically</li>
+  <li><strong>Today's tasks</strong> are highlighted in amber</li>
+  <li>Only <em>you</em> can see your personal tasks — not other family members</li>
+  <li>Turn on <strong>Family Task</strong> to make a task visible to everyone</li>
+</ul>
+
+<h3>📆 My Calendar (Personal Smart Calendar)</h3>
+<p>Three views available via tabs at the top:</p>
+<ul>
+  <li><strong>Today</strong> — your agenda for today: time-blocked events + priority-ranked tasks</li>
+  <li><strong>List</strong> — all your tasks grouped by date (Overdue, Today, Tomorrow, This Week, Later)</li>
+  <li><strong>Calendar</strong> — full monthly/weekly calendar showing both your events (blocks) and tasks (dots on due date)</li>
+</ul>
+
+<h3>🍽️ Meal Planner</h3>
+<ul>
+  <li>7-day grid with Breakfast, Lunch, and Dinner rows</li>
+  <li>Tap any empty slot to add a meal (title, description, who's cooking, prep time)</li>
+  <li>Add a recipe URL to link to the recipe website</li>
+  <li>Tap <strong>"Add to Shopping List"</strong> on any meal to add ingredients</li>
+</ul>
+
+<h3>✨ Chore Chart</h3>
+<ul>
+  <li>Weekly grid: rows = chores, columns = Mon–Sun</li>
+  <li>Tap a cell to mark a chore as done (green checkmark)</li>
+  <li>Points are awarded per completion</li>
+  <li><strong>Leaderboard</strong> at the top shows who has the most points this week — great for kids!</li>
+</ul>
+
+<h3>📸 Photos</h3>
+<ul>
+  <li>Auto-rotating carousel at the top (changes every 30 seconds)</li>
+  <li>All photos displayed in a grid below</li>
+  <li>Tap the <strong>Upload</strong> button to add a photo from your device</li>
+  <li>Add a caption and it appears for everyone</li>
+</ul>
+
+<h3>📣 Announcements</h3>
+<ul>
+  <li>Post important messages for the whole family</li>
+  <li>Set a <strong>priority</strong> (Low / Medium / High / Urgent) — urgent ones appear in red</li>
+  <li>Set an <strong>expiry date</strong> so old announcements disappear automatically</li>
+  <li><strong>Pin</strong> important announcements so they stay at the top</li>
+  <li>React with emoji 👍❤️😂😮</li>
+</ul>
+
+<h3>ℹ️ Important Info</h3>
+<p>A permanent reference hub for things the whole family needs. Organised into categories:</p>
+<ul>
+  <li>🚨 Emergency Contacts</li>
+  <li>📶 WiFi Passwords</li>
+  <li>🏫 School Portals &amp; Links</li>
+  <li>🔧 Service Providers</li>
+  <li>📋 Other</li>
+</ul>
+<p>Tap <strong>Copy</strong> on any entry to copy the content to your clipboard instantly.</p>
+
+<h3>🎤 Voice Input</h3>
+<p>Tap the <strong>microphone button</strong> (bottom-right corner of the screen) and speak a command:</p>
+<ul>
+  <li><em>"Add milk to shopping list"</em></li>
+  <li><em>"Add task — call the dentist"</em></li>
+  <li><em>"Show calendar"</em></li>
+  <li><em>"Go to shopping"</em></li>
+</ul>
+<div class="box box-blue">
+  <strong>📱 Voice requires microphone permission:</strong>
+  The first time you use it, your device will ask permission to use the microphone. Tap "Allow". Voice works in Safari (iOS) and Chrome/Edge (Windows).
+</div>
+
+<hr>
+
+<!-- ═══════════════ REAL-TIME ═══════════════ -->
+<h2>How Real-Time Sync Works</h2>
+
+<p>Family Hub uses <strong>live database connections</strong>. When any family member makes a change:</p>
+
+<ul class="steps">
+  <li>
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <strong>You add "Milk" to the shopping list on your iPhone</strong>
+      <span>The item is saved to the shared database instantly</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <strong>Everyone else's app receives an automatic notification</strong>
+      <span>No manual refresh needed — the update appears on their screen within 1–2 seconds</span>
+    </div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <strong>All devices always show the same data</strong>
+      <span>Whether on the kitchen iPad, your iPhone, or a Windows laptop at work</span>
+    </div>
+  </li>
+</ul>
+
+<div class="box box-green">
+  <strong>✅ Works across all devices simultaneously</strong>
+  You can have the shopping list open on the kitchen tablet AND on your phone at the store — both will update in real-time as either person makes changes.
+</div>
+
+<hr>
+
+<!-- ═══════════════ WHO IS HOME ═══════════════ -->
+<h2>Updating Your Location Status</h2>
+
+<p>On the Dashboard, the <strong>"Who Is Home"</strong> widget shows where everyone is. Each person updates their own status:</p>
+
+<ol>
+  <li>Go to the <strong>Dashboard</strong></li>
+  <li>Find the "Who Is Home" section</li>
+  <li>Tap your own card (it says "tap to update")</li>
+  <li>Choose your status: 🏠 Home · 🚗 Away · ⏰ Running Late · 📚 School · 💼 Work</li>
+</ol>
+
+<p>Everyone else sees your status update immediately.</p>
+
+<hr>
+
+<!-- ═══════════════ SETTINGS ═══════════════ -->
+<h2>Admin Settings (Parents Only)</h2>
+
+<p>The family Admin (first account created) can manage family settings:</p>
+
+<h3>Managing Family Members</h3>
+<ol>
+  <li>Go to <strong>Settings</strong> in the sidebar</li>
+  <li>Scroll to <strong>Family Members</strong></li>
+  <li>Tap <strong>Add Member</strong> to add a new family member</li>
+  <li>Set their name, nickname, colour (used for their calendar events), role, and date of birth</li>
+  <li>Use the toggle to activate or deactivate a member</li>
+</ol>
+
+<h3>Weather City</h3>
+<ol>
+  <li>Go to <strong>Settings → App Settings</strong></li>
+  <li>Type your city name in the <strong>Weather City</strong> box (e.g. "Chicago, US")</li>
+  <li>Tap <strong>Save</strong> — the weather widget on the Dashboard will now show your city</li>
+</ol>
+
+<hr>
+
+<!-- ═══════════════ TIPS ═══════════════ -->
+<h2>Tips for Your Family of 4</h2>
+
+<table>
+  <tr>
+    <th>Scenario</th>
+    <th>How to handle it in Family Hub</th>
+  </tr>
+  <tr>
+    <td>📍 Stuck in traffic, running late</td>
+    <td>Tap your card on the Dashboard → set status to "Running Late"</td>
+  </tr>
+  <tr>
+    <td>🛒 Need to add something to the grocery list</td>
+    <td>Tap mic button → say "Add [item] to shopping list" — or open Shopping and tap +</td>
+  </tr>
+  <tr>
+    <td>📅 Kids have a new sports schedule</td>
+    <td>Open Family Calendar → tap the first occurrence → set it as a recurring event (weekly)</td>
+  </tr>
+  <tr>
+    <td>🍽️ Planning meals for the week</td>
+    <td>Open Meals → tap each empty slot for breakfast/lunch/dinner for each day</td>
+  </tr>
+  <tr>
+    <td>📸 Sharing a photo from a trip</td>
+    <td>Open Photos → tap Upload → select photo → add a caption</td>
+  </tr>
+  <tr>
+    <td>📋 Keeping the kitchen tablet always on</td>
+    <td>Install the app on the tablet, stay signed in, set screen to "never sleep" in device settings</td>
+  </tr>
+  <tr>
+    <td>🔑 Kid forgot their password</td>
+    <td>Use "Send magic link" on the login screen — no password needed</td>
+  </tr>
+  <tr>
+    <td>🔒 Private task only you should see</td>
+    <td>Switch to Personal Mode → add the task → leave "Family Task" unchecked</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- ═══════════════ TROUBLESHOOTING ═══════════════ -->
+<h2>Troubleshooting</h2>
+
+<h3>The app isn't updating in real-time</h3>
+<p>Check your internet connection. Real-time sync requires an active internet connection. Pull down to refresh if needed.</p>
+
+<h3>I can't install it on my iPhone — I don't see "Add to Home Screen"</h3>
+<p>Make sure you're using <strong>Safari</strong> (not Chrome or Firefox on iOS). The Share button must be tapped from Safari for the option to appear.</p>
+
+<h3>I forgot my password</h3>
+<p>On the login page, tap <strong>"Send magic link"</strong> and enter your email. You'll get an email link to sign in without a password.</p>
+
+<h3>The app shows a setup banner</h3>
+<p>This means the database isn't connected yet. Contact the family Admin — they need to complete the Supabase setup.</p>
+
+<h3>I can hear the microphone click but voice input isn't working</h3>
+<p>On iOS, go to <strong>Settings → Safari → Microphone</strong> and make sure it's allowed. On Windows, check browser permissions in the address bar (🔒 icon).</p>
+
+<hr>
+
+<!-- ═══════════════ QUICK REFERENCE ═══════════════ -->
+<h2>📌 Quick Reference Card</h2>
+<p style="color:#6b7280; font-size:10pt;">Cut this out and stick it on the fridge or kitchen area.</p>
+
+<div style="border: 2px dashed #14b8a6; border-radius: 12px; padding: 20px 24px; margin: 16px 0;">
+  <div style="text-align:center; margin-bottom:14px;">
+    <strong style="font-size:14pt; color:#0f766e;">🏠 Family Hub — Quick Reference</strong><br>
+    <span style="color:#0d9488; font-size:11pt; font-weight:700;">family-hub-seven.vercel.app</span>
+  </div>
+  <table style="font-size:10pt;">
+    <tr>
+      <td style="width:50%; vertical-align:top; padding-right:20px;">
+        <strong>Install on iPhone/iPad:</strong><br>
+        Safari → Share ↑ → Add to Home Screen<br><br>
+        <strong>Install on Windows:</strong><br>
+        Chrome/Edge → address bar install icon → Install<br><br>
+        <strong>Sign in options:</strong><br>
+        Email + password, or "Send magic link"
+      </td>
+      <td style="vertical-align:top;">
+        <strong>Update your location:</strong><br>
+        Dashboard → your card → tap status<br><br>
+        <strong>Add to shopping list by voice:</strong><br>
+        Tap 🎤 → say "Add [item] to shopping list"<br><br>
+        <strong>Private vs shared:</strong><br>
+        Family Mode = everyone sees it<br>
+        Personal Mode = only you see it
+      </td>
+    </tr>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div style="text-align:center; color:#9ca3af; font-size:9.5pt; margin-top:32px;">
+  <p>Family Hub · family-hub-seven.vercel.app · Built for your family ❤️</p>
+  <p>For support or changes, contact your family Admin.</p>
+</div>
+
+</body>
+</html>

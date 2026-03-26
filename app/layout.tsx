@@ -12,6 +12,17 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'default',
     title: 'Family Hub',
+    startupImage: '/icons/icon-512x512.svg',
+  },
+  icons: {
+    apple: [
+      { url: '/icons/icon-152x152.svg', sizes: '152x152' },
+      { url: '/icons/icon-192x192.svg', sizes: '192x192' },
+    ],
+    icon: [
+      { url: '/icons/icon-192x192.svg', sizes: '192x192' },
+      { url: '/icons/icon-512x512.svg', sizes: '512x512' },
+    ],
   },
 }
 
