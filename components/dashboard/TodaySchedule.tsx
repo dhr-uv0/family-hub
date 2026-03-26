@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import { Activity, FamilyMember } from '@/lib/types'
 
@@ -20,6 +20,7 @@ export default function TodaySchedule() {
   const [loading, setLoading] = useState(true)
 
   const fetchActivities = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     const supabase = createClient()
     const today = new Date()
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString()

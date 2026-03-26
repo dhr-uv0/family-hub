@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
 export function useRealtimeSubscription(
@@ -9,6 +9,8 @@ export function useRealtimeSubscription(
   filter?: string
 ) {
   const subscribe = useCallback(() => {
+    if (!isSupabaseConfigured()) return () => {}
+
     const supabase = createClient()
     let channel: RealtimeChannel
 

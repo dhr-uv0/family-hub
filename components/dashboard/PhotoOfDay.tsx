@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { CarouselPhoto } from '@/lib/types'
 
 export default function PhotoOfDay() {
@@ -11,6 +11,7 @@ export default function PhotoOfDay() {
   const [imageError, setImageError] = useState(false)
 
   const fetchPhoto = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     const supabase = createClient()
     const { data, error } = await supabase
       .from('carousel_photos')

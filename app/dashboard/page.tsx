@@ -9,6 +9,7 @@ import WhoIsHome from '@/components/dashboard/WhoIsHome'
 import WeatherWidget from '@/components/dashboard/WeatherWidget'
 import PhotoOfDay from '@/components/dashboard/PhotoOfDay'
 import { MorningBriefing } from '@/components/dashboard/MorningBriefing'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -53,6 +54,19 @@ export default function DashboardPage() {
           {greeting}! 👋
         </h1>
       </div>
+
+      {/* Setup banner — shows until Supabase is configured */}
+      {!isSupabaseConfigured() && (
+        <div className="w-full rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+          <span className="text-xl shrink-0">⚙️</span>
+          <div>
+            <p className="text-sm font-semibold text-amber-800">Supabase not connected</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              Add your <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> to enable data and auth.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Morning briefing — only shows 5-10am */}
       <MorningBriefing />

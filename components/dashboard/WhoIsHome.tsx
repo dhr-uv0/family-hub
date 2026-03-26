@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRealtimeSubscription } from '@/lib/hooks/useRealtimeSubscription'
 import { FamilyMember, LocationStatus, LocationStatusType } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -44,6 +44,7 @@ export default function WhoIsHome() {
   const [expandedMemberId, setExpandedMemberId] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
+    if (!isSupabaseConfigured()) { setLoading(false); return }
     const supabase = createClient()
 
     const { data: { user } } = await supabase.auth.getUser()

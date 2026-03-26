@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { Announcement } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -33,6 +33,7 @@ export default function AnnouncementsBanner() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const fetchAnnouncements = useCallback(async () => {
+    if (!isSupabaseConfigured()) return
     const supabase = createClient()
     const now = new Date().toISOString()
 
