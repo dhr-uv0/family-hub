@@ -19,9 +19,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         'localhost:3000',
-        'family-hub-seven.vercel.app',
-        'fullfamilyhub.com',
-        'www.fullfamilyhub.com',
+        'fullfamilyhub.vercel.app',
       ],
     },
   },
