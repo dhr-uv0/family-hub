@@ -16,10 +16,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA family_hub
 ALTER DEFAULT PRIVILEGES IN SCHEMA family_hub
   GRANT ALL ON FUNCTIONS TO anon, authenticated, service_role;
 
--- Enable realtime for this schema
-ALTER PUBLICATION supabase_realtime ADD SCHEMA family_hub;
-
--- ────────────────────────────────────────────────────────────
+--────────────────────────────────────────────────────────────
 -- Helper: updated_at trigger function
 -- ────────────────────────────────────────────────────────────
 
