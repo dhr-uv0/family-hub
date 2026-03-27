@@ -15,6 +15,7 @@ export function isSupabaseConfigured(): boolean {
 export function createClient() {
   return createBrowserClient(
     SUPABASE_URL || 'https://placeholder.supabase.co',
-    SUPABASE_ANON_KEY || 'placeholder'
+    SUPABASE_ANON_KEY || 'placeholder',
+    { db: { schema: 'family_hub' } }
   )
 }
