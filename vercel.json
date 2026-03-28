@@ -4,6 +4,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["iad1"],
+  "alias": ["fullfamilyhub.vercel.app"],
   "headers": [
     {
       "source": "/sw.js",

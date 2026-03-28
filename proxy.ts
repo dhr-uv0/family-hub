@@ -14,7 +14,7 @@ function isSupabaseConfigured() {
 }
 
 export async function proxy(request: NextRequest) {
-  // If Supabase isn't wired up yet, let all routes through so the app is accessible
+  // If Supabase isn't wired up yet, let all routes through
   if (!isSupabaseConfigured()) {
     return NextResponse.next({ request })
   }
@@ -40,9 +40,19 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/signup')) {
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup')
+
+  // Redirect unauthenticated users to login
+  if (!user && !isAuthPage) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect logged-in users away from login/signup
+  if (user && isAuthPage) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 
@@ -50,5 +60,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard', '/dashboard/:path*', '/login', '/signup'],
 }
