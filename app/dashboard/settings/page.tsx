@@ -38,6 +38,8 @@ import {
   Copy,
   Check,
   Link2,
+  BarChart2,
+  RefreshCw,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -99,6 +101,22 @@ export default function SettingsPage() {
   const [passwordSuccess, setPasswordSuccess] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [adminReport, setAdminReport] = useState<any[] | null>(null)
+  const [reportLoading, setReportLoading] = useState(false)
+
+  const fetchAdminReport = async () => {
+    setReportLoading(true)
+    try {
+      const res = await fetch('/api/admin/users')
+      if (!res.ok) throw new Error('Failed')
+      const json = await res.json()
+      setAdminReport(json.users ?? [])
+    } catch {
+      setAdminReport([])
+    } finally {
+      setReportLoading(false)
+    }
+  }
 
   const fetchData = useCallback(async () => {
     if (!isSupabaseConfigured()) {
@@ -308,6 +326,86 @@ export default function SettingsPage() {
               <div className="px-5 py-8 text-center text-sm text-gray-400">No family members yet</div>
             )}
           </div>
+        </section>
+      )}
+
+      {/* Admin: User & Family Report */}
+      {isAdmin && (
+        <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BarChart2 className="w-4 h-4 text-teal-600" />
+              <h2 className="text-sm font-semibold text-gray-700">Registered Users Report</h2>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-9 gap-1.5 text-gray-600"
+              onClick={fetchAdminReport}
+              disabled={reportLoading}
+            >
+              {reportLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+              {adminReport === null ? 'Load Report' : 'Refresh'}
+            </Button>
+          </div>
+          {adminReport === null ? (
+            <div className="px-5 py-6 text-center text-sm text-gray-400">
+              Click &quot;Load Report&quot; to see all registered users.
+            </div>
+          ) : adminReport.length === 0 ? (
+            <div className="px-5 py-6 text-center text-sm text-gray-400">No users found.</div>
+          ) : (
+            <div className="divide-y divide-gray-50">
+              {adminReport.map(u => (
+                <div key={u.id} className="px-5 py-3.5 flex items-start gap-3">
+                  {/* Avatar */}
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5"
+                    style={{ backgroundColor: u.profile?.color ?? '#94a3b8' }}
+                  >
+                    {u.profile?.name ? u.profile.name.charAt(0).toUpperCase() : '?'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-sm font-semibold text-gray-800 truncate">
+                        {u.profile?.name ?? 'No profile yet'}
+                      </span>
+                      {u.profile?.nickname && (
+                        <span className="text-xs text-gray-400">({u.profile.nickname})</span>
+                      )}
+                      {u.profile?.role && (
+                        <span className={cn(
+                          'px-1.5 py-0.5 rounded-full text-xs font-semibold',
+                          u.profile.role === 'admin' ? 'bg-teal-100 text-teal-700' : 'bg-gray-100 text-gray-600'
+                        )}>
+                          {u.profile.role}
+                        </span>
+                      )}
+                      {!u.confirmed && (
+                        <span className="px-1.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                          unconfirmed
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 truncate">{u.email}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Joined {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {u.last_sign_in && (
+                        <> · Last active {new Date(u.last_sign_in).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {adminReport !== null && adminReport.length > 0 && (
+            <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-400">
+              {adminReport.length} registered user{adminReport.length !== 1 ? 's' : ''} total
+              {' · '}
+              {adminReport.filter(u => u.profile).length} with completed profiles
+            </div>
+          )}
         </section>
       )}
 
