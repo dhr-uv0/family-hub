@@ -35,6 +35,9 @@ import {
   Sun,
   MapPin,
   Lock,
+  Copy,
+  Check,
+  Link2,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -95,6 +98,7 @@ export default function SettingsPage() {
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordSuccess, setPasswordSuccess] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
 
   const fetchData = useCallback(async () => {
     if (!isSupabaseConfigured()) {
@@ -118,7 +122,7 @@ export default function SettingsPage() {
       }
     } catch (err) {
       console.error(err)
-      setError('Failed to load settings')
+      setFamilyMembers([])
     } finally {
       setLoading(false)
     }
@@ -228,16 +232,6 @@ export default function SettingsPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3">
-        <AlertCircle className="w-10 h-10 text-red-400" />
-        <p className="text-gray-600">{error}</p>
-        <Button onClick={fetchData} variant="outline">Retry</Button>
       </div>
     )
   }
@@ -356,6 +350,50 @@ export default function SettingsPage() {
               <Sun className="w-3.5 h-3.5" /> Light
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Family Sharing */}
+      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <Link2 className="w-4 h-4 text-teal-600" />
+          <h2 className="text-sm font-semibold text-gray-700">Family Sharing</h2>
+        </div>
+        <div className="px-5 py-4 space-y-3">
+          <p className="text-sm text-gray-500">
+            Share this link with family members so they can create their own account and access shared data.
+          </p>
+          <div className="flex gap-2">
+            <Input
+              readOnly
+              value={typeof window !== 'undefined' ? `${window.location.origin}/signup` : '/signup'}
+              className="flex-1 bg-gray-50 text-gray-600 text-sm font-mono"
+              aria-label="Signup link"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className={cn(
+                'shrink-0 gap-1.5 transition-colors',
+                linkCopied ? 'border-green-300 text-green-700 bg-green-50 hover:bg-green-50' : 'border-gray-200 text-gray-600 hover:border-teal-300'
+              )}
+              onClick={async () => {
+                const url = typeof window !== 'undefined' ? `${window.location.origin}/signup` : '/signup'
+                try {
+                  await navigator.clipboard.writeText(url)
+                  setLinkCopied(true)
+                  setTimeout(() => setLinkCopied(false), 2000)
+                } catch {
+                  /* clipboard blocked */
+                }
+              }}
+            >
+              {linkCopied ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
+            </Button>
+          </div>
+          <p className="text-xs text-gray-400">
+            Each family member signs up with their own email. Once registered they&apos;ll have access to shared calendars, chores, and more.
+          </p>
         </div>
       </section>
 

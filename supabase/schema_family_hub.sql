@@ -498,6 +498,27 @@ CREATE INDEX IF NOT EXISTS idx_fh_calendar_start       ON family_hub.calendar_ev
 CREATE INDEX IF NOT EXISTS idx_fh_calendar_family      ON family_hub.calendar_events(is_family_event);
 
 -- ============================================================
+-- TABLE: families (for family linking via invite codes)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS family_hub.families (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL DEFAULT 'Our Family',
+  invite_code TEXT NOT NULL UNIQUE DEFAULT upper(substring(replace(gen_random_uuid()::text, '-', ''), 1, 6)),
+  created_by  UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE family_hub.families ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Authenticated users can read families"
+  ON family_hub.families FOR SELECT TO authenticated USING (TRUE);
+CREATE POLICY "Users can insert their own family"
+  ON family_hub.families FOR INSERT TO authenticated WITH CHECK (created_by = auth.uid());
+CREATE POLICY "Family creator can update family"
+  ON family_hub.families FOR UPDATE TO authenticated USING (created_by = auth.uid());
+
+-- ============================================================
 -- Storage bucket for photos (run separately if needed)
 -- ============================================================
 -- INSERT INTO storage.buckets (id, name, public)

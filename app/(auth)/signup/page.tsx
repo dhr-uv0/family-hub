@@ -46,7 +46,7 @@ export default function SignupPage() {
 
     // If session exists immediately, user is logged in (email confirmations disabled)
     if (data.session) {
-      router.push('/dashboard')
+      router.push('/setup')
       router.refresh()
       return
     }

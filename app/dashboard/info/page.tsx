@@ -83,7 +83,7 @@ export default function InfoPage() {
       setItems(data ?? [])
     } catch (err) {
       console.error(err)
-      setError('Failed to load info')
+      setItems([])
     } finally {
       setLoading(false)
     }
@@ -178,16 +178,6 @@ export default function InfoPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3">
-        <AlertCircle className="w-10 h-10 text-red-400" />
-        <p className="text-gray-600">{error}</p>
-        <Button onClick={fetchData} variant="outline">Retry</Button>
       </div>
     )
   }
