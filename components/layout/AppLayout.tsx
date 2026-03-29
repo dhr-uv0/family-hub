@@ -5,7 +5,6 @@ import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { Header } from './Header'
 import { ServiceWorkerRegistration } from './ServiceWorkerRegistration'
-import { VoiceInput } from '@/components/voice/VoiceInput'
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -50,9 +49,6 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Toast notifications */}
         <Toaster />
-
-        {/* Voice input FAB */}
-        <VoiceInput />
       </div>
     </>
   )

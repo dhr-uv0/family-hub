@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -v \"https://fullfamilyhub.vercel.app/\")",
+      "Bash(curl -sL --max-redirs 5 -w \"\\\\nFinal URL: %{url_effective}\\\\nHTTP: %{http_code}\" \"https://fullfamilyhub.vercel.app/\" -o /dev/null)"
+    ]
+  }
+}

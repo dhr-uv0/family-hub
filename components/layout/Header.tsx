@@ -145,8 +145,8 @@ export function Header() {
         <span className="text-base font-bold text-gray-900">Family Hub</span>
       </Link>
 
-      {/* Center: Mode Switch */}
-      <div className="flex-1 flex justify-center md:justify-start">
+      {/* Center: Mode Switch — mobile only (desktop has it in sidebar) */}
+      <div className="flex-1 flex justify-center md:hidden">
         <ModeSwitch />
       </div>
 

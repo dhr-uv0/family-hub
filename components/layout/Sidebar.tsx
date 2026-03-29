@@ -15,6 +15,7 @@ import {
   Info,
   Settings,
   Home,
+  HelpCircle,
 } from 'lucide-react'
 import { useAppMode } from '@/lib/hooks/useAppMode'
 import { ModeSwitch } from './ModeSwitch'
@@ -39,6 +40,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Announcements', href: '/dashboard/announcements', icon: Bell, modes: ['family'] },
   { label: 'Info', href: '/dashboard/info', icon: Info, modes: ['family'] },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings, modes: ['both'] },
+  { label: 'Help', href: '/dashboard/help', icon: HelpCircle, modes: ['both'] },
 ]
 
 export function Sidebar() {

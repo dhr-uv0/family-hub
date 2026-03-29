@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Home, User, Mail, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -20,6 +20,14 @@ function GoogleIcon() {
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Capture invite code from URL and persist it for setup page
+  useEffect(() => {
+    const invite = searchParams.get('invite')
+    if (invite) sessionStorage.setItem('pendingInvite', invite)
+  }, [searchParams])
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

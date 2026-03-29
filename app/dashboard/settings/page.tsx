@@ -40,7 +40,9 @@ import {
   Link2,
   BarChart2,
   RefreshCw,
+  ChevronDown,
 } from 'lucide-react'
+import { searchCities, type GeoResult } from '@/lib/weather'
 import { useRouter } from 'next/navigation'
 
 const MEMBER_COLORS = [
@@ -101,8 +103,36 @@ export default function SettingsPage() {
   const [passwordSuccess, setPasswordSuccess] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [familyInviteCode, setFamilyInviteCode] = useState<string | null>(null)
+  const [inviteCopied, setInviteCopied] = useState(false)
   const [adminReport, setAdminReport] = useState<any[] | null>(null)
   const [reportLoading, setReportLoading] = useState(false)
+  const [cityQuery, setCityQuery] = useState('')
+  const [citySuggestions, setCitySuggestions] = useState<GeoResult[]>([])
+  const [citySearching, setCitySearching] = useState(false)
+
+  const handleCitySearch = async (q: string) => {
+    setCityQuery(q)
+    if (q.length < 2) { setCitySuggestions([]); return }
+    setCitySearching(true)
+    const results = await searchCities(q)
+    setCitySuggestions(results)
+    setCitySearching(false)
+  }
+
+  const selectCity = (result: GeoResult) => {
+    const label = result.admin1
+      ? `${result.name}, ${result.admin1}, ${result.country}`
+      : `${result.name}, ${result.country}`
+    setWeatherCity(label)
+    setCityQuery(label)
+    setCitySuggestions([])
+    localStorage.setItem('weatherCity', label)
+    // Bust the weather cache so it reloads with new city
+    localStorage.removeItem('weather_cache')
+    setWeatherSaved(true)
+    setTimeout(() => setWeatherSaved(false), 2000)
+  }
 
   const fetchAdminReport = async () => {
     setReportLoading(true)
@@ -136,7 +166,28 @@ export default function SettingsPage() {
       if (user) {
         setCurrentUser({ email: user.email, id: user.id })
         const me = (membersData ?? []).find((m: FamilyMember) => m.user_id === user.id)
-        setIsAdmin(me?.role === 'admin')
+        const admin = me?.role === 'admin'
+        setIsAdmin(admin)
+
+        // Load or create family invite code for admins
+        if (admin) {
+          const { data: family } = await supabase
+            .from('families')
+            .select('invite_code')
+            .eq('created_by', user.id)
+            .maybeSingle()
+
+          if (family) {
+            setFamilyInviteCode(family.invite_code)
+          } else {
+            const { data: newFamily } = await supabase
+              .from('families')
+              .insert({ created_by: user.id })
+              .select('invite_code')
+              .single()
+            if (newFamily) setFamilyInviteCode(newFamily.invite_code)
+          }
+        }
       }
     } catch (err) {
       console.error(err)
@@ -421,20 +472,44 @@ export default function SettingsPage() {
             <Label className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
               <MapPin className="w-3.5 h-3.5" /> Weather City
             </Label>
-            <p className="text-xs text-gray-400 mb-2">City shown in the weather widget on the dashboard</p>
-            <div className="flex gap-2">
-              <Input
-                value={weatherCity}
-                onChange={e => setWeatherCity(e.target.value)}
-                placeholder="e.g. London, UK"
-                className="flex-1"
-              />
-              <Button onClick={handleSaveWeather} className={cn(
-                'transition-colors',
-                weatherSaved ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-teal-500 hover:bg-teal-600 text-white'
-              )}>
-                {weatherSaved ? 'Saved!' : 'Save'}
-              </Button>
+            <p className="text-xs text-gray-400 mb-2">Start typing to search — select a city from the list</p>
+            <div className="relative">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    value={cityQuery || weatherCity}
+                    onChange={e => handleCitySearch(e.target.value)}
+                    placeholder="e.g. Seattle, Sammamish..."
+                    className="flex-1 pr-8"
+                    autoComplete="off"
+                  />
+                  {citySearching && (
+                    <Loader2 className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-gray-400" />
+                  )}
+                </div>
+                <Button
+                  onClick={() => { localStorage.setItem('weatherCity', weatherCity); setWeatherSaved(true); setTimeout(() => setWeatherSaved(false), 2000) }}
+                  className={cn('transition-colors shrink-0', weatherSaved ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-teal-500 hover:bg-teal-600 text-white')}
+                >
+                  {weatherSaved ? <><Check className="w-4 h-4" /> Saved!</> : 'Save'}
+                </Button>
+              </div>
+              {citySuggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-12 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 overflow-hidden">
+                  {citySuggestions.map((r, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => selectCity(r)}
+                      className="w-full text-left px-3 py-2.5 text-sm hover:bg-teal-50 transition-colors border-b border-gray-50 last:border-0"
+                    >
+                      <span className="font-medium text-gray-800">{r.name}</span>
+                      {r.admin1 && <span className="text-gray-400">, {r.admin1}</span>}
+                      <span className="text-gray-400">, {r.country}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -458,40 +533,55 @@ export default function SettingsPage() {
           <h2 className="text-sm font-semibold text-gray-700">Family Sharing</h2>
         </div>
         <div className="px-5 py-4 space-y-3">
-          <p className="text-sm text-gray-500">
-            Share this link with family members so they can create their own account and access shared data.
-          </p>
-          <div className="flex gap-2">
-            <Input
-              readOnly
-              value={typeof window !== 'undefined' ? `${window.location.origin}/signup` : '/signup'}
-              className="flex-1 bg-gray-50 text-gray-600 text-sm font-mono"
-              aria-label="Signup link"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className={cn(
-                'shrink-0 gap-1.5 transition-colors',
-                linkCopied ? 'border-green-300 text-green-700 bg-green-50 hover:bg-green-50' : 'border-gray-200 text-gray-600 hover:border-teal-300'
-              )}
-              onClick={async () => {
-                const url = typeof window !== 'undefined' ? `${window.location.origin}/signup` : '/signup'
-                try {
-                  await navigator.clipboard.writeText(url)
-                  setLinkCopied(true)
-                  setTimeout(() => setLinkCopied(false), 2000)
-                } catch {
-                  /* clipboard blocked */
-                }
-              }}
-            >
-              {linkCopied ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
-            </Button>
-          </div>
-          <p className="text-xs text-gray-400">
-            Each family member signs up with their own email. Once registered they&apos;ll have access to shared calendars, chores, and more.
-          </p>
+          {isAdmin && familyInviteCode ? (
+            <>
+              <p className="text-sm text-gray-500">
+                Share this unique invite link with family members. Each person who signs up through this link is connected to your family.
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  readOnly
+                  value={typeof window !== 'undefined' ? `${window.location.origin}/signup?invite=${familyInviteCode}` : ''}
+                  className="flex-1 bg-gray-50 text-gray-600 text-xs font-mono"
+                  aria-label="Family invite link"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className={cn(
+                    'shrink-0 gap-1.5 transition-colors',
+                    inviteCopied ? 'border-green-300 text-green-700 bg-green-50 hover:bg-green-50' : 'border-gray-200 text-gray-600 hover:border-teal-300'
+                  )}
+                  onClick={async () => {
+                    const url = `${window.location.origin}/signup?invite=${familyInviteCode}`
+                    try {
+                      await navigator.clipboard.writeText(url)
+                      setInviteCopied(true)
+                      setTimeout(() => setInviteCopied(false), 2000)
+                    } catch { /* blocked */ }
+                  }}
+                >
+                  {inviteCopied ? <><Check className="w-4 h-4" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy</>}
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 bg-teal-50 rounded-lg">
+                <span className="text-teal-600 text-xs font-semibold">Invite code:</span>
+                <code className="text-teal-700 font-mono font-bold tracking-widest">{familyInviteCode}</code>
+              </div>
+              <p className="text-xs text-gray-400">
+                Each person gets their own login. Once signed up via this link they&apos;ll share calendars, chores, shopping lists, and more.
+              </p>
+            </>
+          ) : isAdmin ? (
+            <div className="flex items-center gap-2 py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-teal-500" />
+              <span className="text-sm text-gray-400">Generating your invite link...</span>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">
+              Ask your family admin for the invite link to share with additional members.
+            </p>
+          )}
         </div>
       </section>
 

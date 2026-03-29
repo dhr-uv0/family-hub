@@ -53,6 +53,20 @@ export default function SetupPage() {
 
       if (insertError) throw insertError
 
+      // Admin: create a family record so they get a unique invite link
+      if (role === 'admin') {
+        await supabase.from('families').insert({ created_by: user.id })
+      }
+
+      // Member joining via invite: store the invite code used in user metadata
+      const pendingInvite = typeof sessionStorage !== 'undefined'
+        ? sessionStorage.getItem('pendingInvite')
+        : null
+      if (pendingInvite && role === 'member') {
+        await supabase.auth.updateUser({ data: { invite_code_used: pendingInvite } })
+        sessionStorage.removeItem('pendingInvite')
+      }
+
       router.push('/dashboard')
       router.refresh()
     } catch (err: any) {

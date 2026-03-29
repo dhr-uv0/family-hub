@@ -53,7 +53,7 @@ export default function CalendarPage() {
       .channel('calendar-activities')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'activities' },
+        { event: '*', schema: 'family_hub', table: 'activities' },
         () => {
           fetchData()
         }
