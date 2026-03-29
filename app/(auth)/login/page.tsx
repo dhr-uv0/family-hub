@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Home, Mail, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
+import { Home, Mail, Lock, Loader2, AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
@@ -23,10 +23,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [magicLoading, setMagicLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [magicSent, setMagicSent] = useState(false)
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true)
@@ -40,7 +38,6 @@ export default function LoginPage() {
       setError(oauthError.message)
       setGoogleLoading(false)
     }
-    // On success, browser is redirected — no need to reset state
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -62,30 +59,6 @@ export default function LoginPage() {
 
     router.push('/dashboard')
     router.refresh()
-  }
-
-  const handleMagicLink = async () => {
-    if (!email) {
-      setError('Please enter your email address first.')
-      return
-    }
-    setMagicLoading(true)
-    setError(null)
-
-    const supabase = createClient()
-    const { error: magicError } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
-    })
-
-    setMagicLoading(false)
-
-    if (magicError) {
-      setError(magicError.message)
-      return
-    }
-
-    setMagicSent(true)
   }
 
   return (
@@ -112,15 +85,25 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Magic link success */}
-          {magicSent && (
-            <div className="flex items-start gap-3 p-3.5 rounded-lg bg-teal-50 border border-teal-200 mb-5">
-              <CheckCircle className="w-4 h-4 text-teal-600 mt-0.5 shrink-0" />
-              <p className="text-sm text-teal-700">
-                Magic link sent! Check your email to sign in.
-              </p>
-            </div>
-          )}
+          {/* Google sign-in */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={loading || googleLoading}
+            className={cn(
+              'w-full flex items-center justify-center gap-2.5 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 transition-colors shadow-sm mb-4',
+              (loading || googleLoading) && 'opacity-60 cursor-not-allowed'
+            )}
+          >
+            {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
+            {googleLoading ? 'Redirecting...' : 'Continue with Google'}
+          </button>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xs text-gray-400 font-medium">or</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email */}
@@ -172,56 +155,16 @@ export default function LoginPage() {
             {/* Sign in button */}
             <button
               type="submit"
-              disabled={loading || magicLoading}
+              disabled={loading || googleLoading}
               className={cn(
                 'w-full flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 transition-colors',
-                (loading || magicLoading) && 'opacity-60 cursor-not-allowed'
+                (loading || googleLoading) && 'opacity-60 cursor-not-allowed'
               )}
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400 font-medium">or</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
-
-          {/* Google sign-in */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            disabled={loading || magicLoading || googleLoading}
-            className={cn(
-              'w-full flex items-center justify-center gap-2.5 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 transition-colors shadow-sm',
-              (loading || magicLoading || googleLoading) && 'opacity-60 cursor-not-allowed'
-            )}
-          >
-            {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-            {googleLoading ? 'Redirecting...' : 'Continue with Google'}
-          </button>
-
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400 font-medium">or</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
-
-          {/* Magic link button */}
-          <button
-            onClick={handleMagicLink}
-            disabled={loading || magicLoading}
-            className={cn(
-              'w-full flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg text-sm font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 transition-colors',
-              (loading || magicLoading) && 'opacity-60 cursor-not-allowed'
-            )}
-          >
-            {magicLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {magicLoading ? 'Sending...' : 'Send magic link'}
-          </button>
 
           {/* Sign up link */}
           <p className="text-center text-sm text-gray-500 mt-6">
