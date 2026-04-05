@@ -7,7 +7,7 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      db: { schema: 'family_hub' },
+      db: { schema: process.env.NEXT_PUBLIC_SUPABASE_SCHEMA ?? 'family_hub' },
       cookies: {
         getAll() { return cookieStore.getAll() },
         setAll(cookiesToSet) {

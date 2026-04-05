@@ -16,6 +16,6 @@ export function createClient() {
   return createBrowserClient(
     SUPABASE_URL || 'https://placeholder.supabase.co',
     SUPABASE_ANON_KEY || 'placeholder',
-    { db: { schema: 'family_hub' } }
+    { db: { schema: process.env.NEXT_PUBLIC_SUPABASE_SCHEMA ?? 'family_hub' } }
   )
 }

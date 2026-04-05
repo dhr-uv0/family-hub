@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     {
-      db: { schema: 'family_hub' },
+      db: { schema: process.env.NEXT_PUBLIC_SUPABASE_SCHEMA ?? 'family_hub' },
       cookies: {
         getAll() { return request.cookies.getAll() },
         setAll(cookiesToSet) {
