@@ -25,6 +25,7 @@ export async function proxy(request: NextRequest) {
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     {
+      db: { schema: 'family_hub' },
       cookies: {
         getAll() { return request.cookies.getAll() },
         setAll(cookiesToSet) {
