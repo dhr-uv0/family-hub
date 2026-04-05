@@ -13,7 +13,7 @@ function isSupabaseConfigured() {
   )
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // If Supabase isn't wired up yet, let all routes through
   if (!isSupabaseConfigured()) {
     return NextResponse.next({ request })
